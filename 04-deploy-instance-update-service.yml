@@ -1,0 +1,50 @@
+---
+# Example from RH support site
+# https://access.redhat.com/articles/3055801
+- hosts: all
+  gather_facts: false
+  connection: local
+
+  vars:
+    provider_id: "1000000000001"
+    max_retries: 9
+    retry_interval: 20
+
+    instance_type: 't2.micro'
+    region: 'us-east-1'
+    aws_zone: 'b'
+    image: 'ami-b63769a1'
+    keypair: 'IIS-ERICCHONG'
+#    ansible_ssh_private_key_file: /home/echong/AWS/IIS-ERICCHONG.pem
+    security_group: 'ERIC-SEC-GROUP-1'
+    vpc_subnet_id: 'subnet-bc1f0497'
+    instance_tags: '{"Name":"{{ server_name }}","Project":"TEST","Owner":"ECHONG"}'
+
+  tasks:
+    - debug: var=manageiq.api_url
+    - debug: var=manageiq.api_token
+    - debug: var=manageiq.service
+
+    - name: Set the Provider URL
+      set_fact:
+        provider_url: "{{ manageiq.api_url }}/api/providers/{{ provider_id }}"
+
+    - name: Set the Service URL
+      set_fact:
+        svc_url: "/api/{{ manageiq.service }}"
+
+    - debug: var=svc_url 
+
+    - name: Create Instance
+      ec2:
+        image: "{{ image }}"
+        instance_type: "{{ instance_type }}"
+        keypair: "{{ keypair }}"
+        instance_tags: "{{ instance_tags }}"
+        group: "{{ security_group }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        region: "{{ region }}"
+#       aws_zone: "{{ aws_zone }}"
+        wait: true
+        assign_public_ip: yes
+      register: ec2_info
