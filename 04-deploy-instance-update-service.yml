@@ -6,7 +6,7 @@
   connection: local
 
   vars:
-    provider_id: "1000000000001"
+    provider_id: "1000000000005"
     max_retries: 9
     retry_interval: 20
 
@@ -48,3 +48,21 @@
         wait: true
         assign_public_ip: yes
       register: ec2_info
+     
+    - debug: var=ec2_info
+
+    - name: Refresh provider in CloudForms
+      uri:
+        url: "{{ provider_url }}"
+        method: POST
+        body:
+          action: refresh
+        body_format: json
+        validate_certs: False
+        headers:
+          X-Auth-Token: "{{ manageiq.api_token }}"
+          Content-Type: "application/json"
+        status_code: 200
+      register: output
+
+    - debug: var=output 
