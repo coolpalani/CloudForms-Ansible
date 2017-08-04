@@ -5,6 +5,10 @@
   gather_facts: false
   connection: local
 
+  environment:
+     http_proxy: http://192.168.0.24:3128
+     https_proxy: http://192.168.0.24:3128
+
   vars:
     provider_id: "1000000000005"
     max_retries: 9
