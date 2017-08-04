@@ -71,6 +71,29 @@
 
     - debug: var=output 
 
+    - name: set the task href
+      set_fact:
+        task_url: "{{ output.json.task_href}}"
+
+    - debug: var=task_url
+
+    - name: Wait for the refresh to end
+      uri:
+        url: "{{ task_url }}"
+        method: GET
+        validate_certs: False
+        headers:
+          X-Auth-Token: "{{ manageiq.api_token }}"
+          Content-Type: "application/json"
+        status_code: 200
+      register: task_result
+      until: task_result.json.state == 'Finished' or task_result.json.status == 'Error'
+      failed_when: task_result.json.status == 'Error'
+      retries: "{{max_retries}}"
+      delay: "{{retry_interval}}"
+
+    - debug: var=task_result
+
     - set_fact: find_vm_url="{{ manageiq.api_url }}/api/vms?expand=resources&attributes=href,uid_em&filter[]=uid_ems='{{ new_vm_uid }}'"
 
     - debug: var=find_vm_url
