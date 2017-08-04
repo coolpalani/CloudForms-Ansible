@@ -53,7 +53,7 @@
 
     - set_fact: new_vm_uid="{{ ec2_info.instances[0].id }}"
 
-    - deug: var='{{ new_vm_uid }}'
+    - debug: var=new_vm_uid
 
     - name: Refresh provider in CloudForms
       uri:
