@@ -93,6 +93,14 @@
 
     - debug: var=cf_vm_href
 
+    - name: Create an array of vms
+      set_fact:
+        vms: "{{ vms|default([]) + [ { 'href': svc_url, 'resource':  { 'href': item } } ] }}"
+      with_items:
+        - "{{ cf_vm_href }}"
+
+    - debug: var=vms
+
     - name: Register vm with the service
       uri:
         url: "{{ manageiq.api_url }}/api/services"
