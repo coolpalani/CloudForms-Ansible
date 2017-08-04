@@ -53,6 +53,8 @@
 
     - set_fact: new_vm_uid="{{ ec2_info.instances[0].id }}"
 
+    - deug: var='{{ new_vm_uid }}'
+
     - name: Refresh provider in CloudForms
       uri:
         url: "{{ provider_url }}"
@@ -70,6 +72,8 @@
     - debug: var=output 
 
     - set_fact: find_vm_url="{{ manageiq.api_url }}/api/vms?expand=resources&attributes=href,uid_em&filter[]=uid_ems='{{ new_vm_uid }}'"
+
+    - debug: var=find_vm_url
 
     - name: Call to CloudForms to find href for new_vm_uid
       uri:
