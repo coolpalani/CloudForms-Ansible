@@ -17,7 +17,8 @@
     instance_type: 't2.micro'
     region: 'us-east-1'
     aws_zone: 'b'
-    image: 'ami-b63769a1'
+#    image: 'ami-b63769a1'
+    image: 'ami-43cc5854'
     keypair: 'IIS-ERICCHONG'
 #    ansible_ssh_private_key_file: /home/echong/AWS/IIS-ERICCHONG.pem
     security_group: 'ERIC-SEC-GROUP-1'
